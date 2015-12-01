@@ -6,10 +6,10 @@
     "s1": {
       "type": "kronos-stdin",
       "endpoints": {
-        "out": "s2"
+        "out": "s2/in"
       }
     },
-		"s2": {
+    "s2": {
       "type": "kronos-stdout"
     }
   }
