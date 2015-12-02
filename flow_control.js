@@ -19,8 +19,12 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 		step.endpoints.in.receive(function* () {
 			while (step.isRunning) {
 				const request = yield;
-				const data = request.stream.read();
-				manager.registerFlow(manager.getStepInstance(JSON.parse(data)));
+				try {
+					const data = request.stream.read();
+					manager.registerFlow(manager.getStepInstance(JSON.parse(data)));
+				} catch (e) {
+					step.error(e);
+				}
 			}
 		});
 		return Promise.resolve(step);

@@ -26,6 +26,10 @@ describe('flow-control', function () {
     encoding: 'utf8'
   });
 
+  const invalidFlowStream = fs.createReadStream(path.join(__dirname, 'fixtures', 'invalid.flow'), {
+    encoding: 'utf8'
+  });
+
   const fc = manager.steps['kronos-flow-control'].createInstance(manager, undefined, {
     name: "myStep",
     type: "kronos-flow-control"
@@ -36,11 +40,7 @@ describe('flow-control', function () {
     "active": true
   });
 
-  try {
-    testEndpoint.connect(fc.endpoints.in);
-  } catch (e) {
-    console.log(e);
-  }
+  testEndpoint.connect(fc.endpoints.in);
 
   describe('static', function () {
     testStep.checkStepStatic(manager, fc);
@@ -56,12 +56,15 @@ describe('flow-control', function () {
           stream: flowStream
         });
 
+        testEndpoint.send({
+          stream: invalidFlowStream
+        });
+
         wasRunning = true;
       }
 
       if (state === 'stopped' && wasRunning) {
         //console.log(`state: ${state}`);
-        //it("did load low", function () {
         assert.equal(manager.flows['sample'].name, 'sample');
       }
     });
