@@ -42,6 +42,13 @@ describe('flow-control', function () {
 
   testEndpoint.connect(fc.endpoints.in);
 
+  const testCommandEndpoint = BaseStep.createEndpoint('test', {
+    "out": true,
+    "active": true
+  });
+
+  testCommandEndpoint.connect(fc.endpoints.command);
+
   describe('static', function () {
     testStep.checkStepStatic(manager, fc);
   });
@@ -58,6 +65,13 @@ describe('flow-control', function () {
 
         testEndpoint.send({
           stream: invalidFlowStream
+        });
+
+        testCommandEndpoint.send({
+          data: [{
+            type: "stop",
+            flow: "sample"
+          }]
         });
 
         wasRunning = true;

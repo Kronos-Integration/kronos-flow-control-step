@@ -10,6 +10,11 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 			"in": true,
 			"passive": true,
 			"uti": "org.kronos.flow"
+		},
+		"command": {
+			"in": true,
+			"passive": true,
+			"uti": "org.kronos.flow.control"
 		}
 	},
 	_start() {
@@ -27,6 +32,47 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 				}
 			}
 		});
+
+		step.endpoints.command.receive(function* () {
+			while (step.isRunning) {
+				const request = yield;
+				try {
+					let commands;
+
+					if (request.data) {
+						commands = request.data;
+					} else {
+						const data = request.stream.read();
+						commands = JSON.parse(data);
+					}
+
+					//console.log(`commands: ${JSON.stringify(commands)}`);
+
+					commands.forEach(c => {
+						const flow = manager.flows[c.flow];
+						switch (c.type) {
+							case 'start':
+								flow.start();
+								break;
+
+							case 'stop':
+								flow.stop().then(function () {
+									console.log(`flow ${flow} stopped`);
+								});
+								break;
+
+							case 'delete':
+								flow.remove();
+								break;
+						}
+					});
+				} catch (e) {
+					//console.log(e);
+					step.error(e);
+				}
+			}
+		});
+
 		return Promise.resolve(step);
 	}
 });
