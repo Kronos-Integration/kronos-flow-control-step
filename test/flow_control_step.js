@@ -69,7 +69,7 @@ describe('flow-control', function () {
 
         testCommandEndpoint.send({
           data: [{
-            type: "stop",
+            action: "stop",
             flow: "sample"
           }]
         });

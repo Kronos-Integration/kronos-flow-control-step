@@ -46,11 +46,9 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 						commands = JSON.parse(data);
 					}
 
-					//console.log(`commands: ${JSON.stringify(commands)}`);
-
 					commands.forEach(c => {
 						const flow = manager.flows[c.flow];
-						switch (c.type) {
+						switch (c.action) {
 							case 'start':
 								flow.start();
 								break;

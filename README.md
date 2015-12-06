@@ -2,6 +2,39 @@
 
 Step to perform flow controlling actions like load remove stop start
 
+Command endpoint
+================
+
+start a flow
+------------
+
+```
+{
+  "action" : "start",
+  "flow" : "my-flow"
+}
+```
+
+stop a flow
+-----------
+
+```
+{
+  "action" : "stop",
+  "flow" : "my-flow"
+}
+```
+
+delete a flow
+-------------
+
+```
+{
+  "action" : "delete",
+  "flow" : "my-flow"
+}
+```
+
 install
 =======
 
