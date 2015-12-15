@@ -55,7 +55,7 @@ describe('flow-control', function () {
 
   describe('live-cycle', function () {
     let wasRunning = false;
-    testStep.checkStepLivecycle(manager, fc, function (step, state, livecycle) {
+    testStep.checkStepLivecycle(manager, fc, function (step, state, livecycle, done) {
       if (state === 'running' && !wasRunning) {
         //console.log(`${state}: ${livecycle.statesHistory}`);
 
@@ -81,6 +81,8 @@ describe('flow-control', function () {
         //console.log(`state: ${state}`);
         assert.equal(manager.flows['sample'].name, 'sample');
       }
+
+      done();
     });
   });
 });
