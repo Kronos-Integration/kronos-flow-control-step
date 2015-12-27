@@ -67,6 +67,25 @@ describe('flow-control', function () {
           stream: invalidFlowStream
         });
 
+        testEndpoint.send({
+          data: {
+            "name": "sample2",
+            "type": "kronos-flow",
+            "description": "this is the description of the flow",
+            "steps": {
+              "s1": {
+                "type": "kronos-stdin",
+                "endpoints": {
+                  "out": "s2/in"
+                }
+              },
+              "s2": {
+                "type": "kronos-stdout"
+              }
+            }
+          }
+        });
+
         testCommandEndpoint.send({
           data: [{
             action: "stop",
@@ -80,6 +99,7 @@ describe('flow-control', function () {
       if (state === 'stopped' && wasRunning) {
         //console.log(`state: ${state}`);
         assert.equal(manager.flows['sample'].name, 'sample');
+        assert.equal(manager.flows['sample2'].name, 'sample2');
       }
 
       done();

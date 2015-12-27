@@ -4,7 +4,7 @@
 
 const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 	"name": "kronos-flow-control",
-	"description": "flow control step (load/unload)",
+	"description": "flow control step (load/delete/stop/start)",
 	"endpoints": {
 		"in": {
 			"in": true,
@@ -25,8 +25,11 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 			while (step.isRunning) {
 				const request = yield;
 				try {
-					const data = request.stream.read();
-					manager.registerFlow(manager.getStepInstance(JSON.parse(data)));
+					let data = request.data;
+					if (!data) {
+						data = JSON.parse(request.stream.read());
+					}
+					manager.registerFlow(manager.getStepInstance(data));
 				} catch (e) {
 					step.error(e);
 				}
@@ -42,8 +45,7 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 					if (request.data) {
 						commands = request.data;
 					} else {
-						const data = request.stream.read();
-						commands = JSON.parse(data);
+						commands = JSON.parse(request.stream.read());
 					}
 
 					commands.forEach(c => {
