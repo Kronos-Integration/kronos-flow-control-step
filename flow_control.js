@@ -46,20 +46,25 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 						const flow = manager.flows[c.flow];
 						switch (c.action) {
 							case 'start':
-								flow.start();
+								flow.start().then(f => {
+									step.info(`${flow} started`);
+								})
 								break;
 
 							case 'stop':
-								flow.stop();
+								flow.stop(f => {
+									step.info(`${flow} stopped`);
+								});
 								break;
 
 							case 'delete':
-								flow.remove();
+								flow.remove(f => {
+									step.info(`${flow} deleted`);
+								});
 								break;
 						}
 					});
 				} catch (e) {
-					//console.log(e);
 					step.error(e);
 				}
 			}
