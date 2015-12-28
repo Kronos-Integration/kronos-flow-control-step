@@ -40,13 +40,7 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 			while (step.isRunning) {
 				const request = yield;
 				try {
-					let commands;
-
-					if (request.data) {
-						commands = request.data;
-					} else {
-						commands = JSON.parse(request.stream.read());
-					}
+					const commands = request.data ? request.data : JSON.parse(request.stream.read());
 
 					commands.forEach(c => {
 						const flow = manager.flows[c.flow];
