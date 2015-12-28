@@ -48,7 +48,7 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 							case 'start':
 								flow.start().then(f => {
 									step.info(`${flow} started`);
-								})
+								});
 								break;
 
 							case 'stop':
