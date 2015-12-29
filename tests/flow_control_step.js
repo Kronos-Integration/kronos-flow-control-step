@@ -57,7 +57,7 @@ describe('flow-control', function () {
     let wasRunning = false;
     testStep.checkStepLivecycle(manager, fc, function (step, state, livecycle, done) {
       if (state === 'running' && !wasRunning) {
-        //console.log(`${state}: ${livecycle.statesHistory}`);
+        console.log(`${state}: ${livecycle.statesHistory}`);
 
         testEndpoint.send({
           stream: flowStream
@@ -86,12 +86,24 @@ describe('flow-control', function () {
           }
         });
 
-        testCommandEndpoint.send({
-          data: [{
-            action: "stop",
-            flow: "sample"
-          }]
-        });
+        try {
+          let promise = testCommandEndpoint.send({
+            data: [{
+              action: "stop",
+              flow: "sample"
+            }]
+          });
+
+          console.log(`${promise}`);
+          promise.then(f => {
+            console.log(`fullfilled: ${f}`);
+          }, r => {
+            console.log(`rejected: ${r}`)
+          });
+        } catch (e) {
+          console.log(e);
+          done(e);
+        }
 
         wasRunning = true;
       }

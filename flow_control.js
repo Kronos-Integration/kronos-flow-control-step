@@ -24,7 +24,8 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 		step.endpoints.in.receive(function* () {
 			while (step.isRunning) {
 				try {
-					const request = yield manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
+					let request;
+					request = yield manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
 						request.stream.read())));
 				} catch (e) {
 					step.error(e);
@@ -34,7 +35,8 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 
 		step.endpoints.command.receive(function* () {
 			while (step.isRunning) {
-				const request = yield new Promise(function (fullfill, reject) {
+				let request;
+				request = yield new Promise(function (fullfill, reject) {
 					try {
 						const commands = request.data ? request.data : JSON.parse(request.stream.read());
 						const results = [];
