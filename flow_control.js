@@ -60,6 +60,12 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 							const results = commands.map(c => {
 								const flow = manager.flows[c.flow];
 								switch (c.action) {
+									case 'get':
+										return Promise.resolve(flow.toJSONWithOptions({
+											includeName: true
+										}));
+										break;
+
 									case 'start':
 										return flow.start();
 										break;

@@ -118,6 +118,25 @@ describe('flow-control', function () {
           return;
         }
 
+        try {
+          promise = testCommandEndpoint.send({
+            data: [{
+              action: "getStepInstance",
+              flow: "sample"
+            }]
+          }).value;
+
+          promise.then(f => {
+            console.log(`D fullfilled: ${f}`);
+          }, r => {
+            console.log(`D rejected: ${r}`)
+          });
+        } catch (e) {
+          console.log(e);
+          done(e);
+          return;
+        }
+
         wasRunning = true;
       }
 
