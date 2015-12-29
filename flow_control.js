@@ -25,8 +25,20 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 			while (step.isRunning) {
 				try {
 					let request;
-					request = yield manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
-						request.stream.read())));
+					request = yield new Promise((fullfill, reject) => {
+						setTimeout(_ => {
+							if (!request) {
+								fullfill("empty flow");
+								return;
+							}
+							try {
+								fullfill(manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
+									request.stream.read()))));
+							} catch (e) {
+								reject(e);
+							}
+						}, 0);
+					});
 				} catch (e) {
 					step.error(e);
 				}
@@ -36,33 +48,40 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 		step.endpoints.command.receive(function* () {
 			while (step.isRunning) {
 				let request;
-				request = yield new Promise(function (fullfill, reject) {
-					try {
-						const commands = request.data ? request.data : JSON.parse(request.stream.read());
-						const results = [];
-
-						commands.forEach(c => {
-							const flow = manager.flows[c.flow];
-							switch (c.action) {
-								case 'start':
-									results.push(flow.start());
-									break;
-
-								case 'stop':
-									results.push(flow.stop());
-									break;
-
-								case 'delete':
-									results.push(flow.remove());
-									break;
+				request = yield new Promise((fullfill, reject) => {
+					setTimeout(_ => {
+						try {
+							if (!request) {
+								fullfill("empty command");
+								return;
 							}
-						});
 
-						fullfill(Promise.all(results));
-					} catch (e) {
-						step.error(e);
-						reject(e);
-					}
+							const commands = request.data ? request.data : JSON.parse(request.stream.read());
+							const results = commands.map(c => {
+								const flow = manager.flows[c.flow];
+								switch (c.action) {
+									case 'start':
+										return flow.start();
+										break;
+
+									case 'stop':
+										return flow.stop();
+										break;
+
+									case 'delete':
+										return flow.remove();
+										break;
+									default:
+										return Promise.reject(new Error(`Unknown command: ${c.action}`));
+								}
+							});
+
+							fullfill(Promise.all(results));
+						} catch (e) {
+							step.error(e);
+							reject(e);
+						}
+					}, 0);
 				});
 			}
 		});

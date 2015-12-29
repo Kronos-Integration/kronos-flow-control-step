@@ -57,14 +57,27 @@ describe('flow-control', function () {
     let wasRunning = false;
     testStep.checkStepLivecycle(manager, fc, function (step, state, livecycle, done) {
       if (state === 'running' && !wasRunning) {
-        console.log(`${state}: ${livecycle.statesHistory}`);
+        //console.log(`${state}: ${livecycle.statesHistory}`);
+        let promise;
 
-        testEndpoint.send({
+        promise = testEndpoint.send({
           stream: flowStream
+        }).value;
+
+        promise.then(f => {
+          console.log(`A fullfilled: ${f}`);
+        }, r => {
+          console.log(`A rejected: ${r}`)
         });
 
-        testEndpoint.send({
+        promise = testEndpoint.send({
           stream: invalidFlowStream
+        }).value;
+
+        promise.then(f => {
+          console.log(`B fullfilled: ${f}`);
+        }, r => {
+          console.log(`B rejected: ${r}`)
         });
 
         testEndpoint.send({
@@ -87,22 +100,22 @@ describe('flow-control', function () {
         });
 
         try {
-          let promise = testCommandEndpoint.send({
+          promise = testCommandEndpoint.send({
             data: [{
               action: "stop",
               flow: "sample"
             }]
-          });
+          }).value;
 
-          console.log(`${promise}`);
           promise.then(f => {
-            console.log(`fullfilled: ${f}`);
+            console.log(`C fullfilled: ${f}`);
           }, r => {
-            console.log(`rejected: ${r}`)
+            console.log(`C rejected: ${r}`)
           });
         } catch (e) {
           console.log(e);
           done(e);
+          return;
         }
 
         wasRunning = true;
