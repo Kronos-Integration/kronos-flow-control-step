@@ -23,13 +23,9 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 
 		step.endpoints.in.receive(function* () {
 			while (step.isRunning) {
-				const request = yield;
 				try {
-					let data = request.data;
-					if (!data) {
-						data = JSON.parse(request.stream.read());
-					}
-					manager.registerFlow(manager.getStepInstance(data));
+					const request = yield manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
+						request.stream.read())));
 				} catch (e) {
 					step.error(e);
 				}
@@ -38,35 +34,34 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 
 		step.endpoints.command.receive(function* () {
 			while (step.isRunning) {
-				const request = yield;
-				try {
-					const commands = request.data ? request.data : JSON.parse(request.stream.read());
+				const request = yield new Promise(function (fullfill, reject) {
+					try {
+						const commands = request.data ? request.data : JSON.parse(request.stream.read());
+						const results = [];
 
-					commands.forEach(c => {
-						const flow = manager.flows[c.flow];
-						switch (c.action) {
-							case 'start':
-								flow.start().then(f => {
-									step.info(`${flow} started`);
-								});
-								break;
+						commands.forEach(c => {
+							const flow = manager.flows[c.flow];
+							switch (c.action) {
+								case 'start':
+									results.push(flow.start());
+									break;
 
-							case 'stop':
-								flow.stop(f => {
-									step.info(`${flow} stopped`);
-								});
-								break;
+								case 'stop':
+									results.push(flow.stop());
+									break;
 
-							case 'delete':
-								flow.remove(f => {
-									step.info(`${flow} deleted`);
-								});
-								break;
-						}
-					});
-				} catch (e) {
-					step.error(e);
-				}
+								case 'delete':
+									results.push(flow.remove());
+									break;
+							}
+						});
+
+						fullfill(Promise.all(results));
+					} catch (e) {
+						step.error(e);
+						reject(e);
+					}
+				});
 			}
 		});
 
