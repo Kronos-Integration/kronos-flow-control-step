@@ -7,90 +7,47 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 	"description": "flow control step (load/delete/stop/start)",
 	"endpoints": {
 		"in": {
-			"in": true,
-			"passive": true,
-			"uti": "org.kronos.flow"
+			"in": true
 		},
 		"command": {
-			"in": true,
-			"passive": true,
-			"uti": "org.kronos.flow.control"
+			"in": true
 		}
 	},
 	_start() {
 		const step = this;
 		const manager = this.manager;
 
-		step.endpoints.in.receive(function* () {
-			while (step.isRunning) {
-				try {
-					let request;
-					request = yield new Promise((fullfill, reject) => {
-						setTimeout(_ => {
-							if (!request) {
-								fullfill("empty flow");
-								return;
-							}
-							try {
-								fullfill(manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
-									request.stream.read()))));
-							} catch (e) {
-								reject(e);
-							}
-						}, 0);
-					});
-				} catch (e) {
-					step.error(e);
+		step.endpoints.in.receive = request =>
+			Promise.resolve(manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
+				request.stream.read()))));
+
+		step.endpoints.command.receive = request => {
+			const commands = request.data ? request.data : JSON.parse(request.stream.read());
+			return Promise.all(commands.map(c => {
+				const flow = manager.flows[c.flow];
+				switch (c.action) {
+					case 'get':
+						return Promise.resolve(flow.toJSONWithOptions({
+							includeName: true
+						}));
+						break;
+
+					case 'start':
+						return flow.start();
+						break;
+
+					case 'stop':
+						return flow.stop();
+						break;
+
+					case 'delete':
+						return flow.remove();
+						break;
+					default:
+						return Promise.reject(new Error(`Unknown command: ${c.action}`));
 				}
-			}
-		});
-
-		step.endpoints.command.receive(function* () {
-			while (step.isRunning) {
-				let request;
-				request = yield new Promise((fullfill, reject) => {
-					setTimeout(_ => {
-						try {
-							if (!request) {
-								fullfill("empty command");
-								return;
-							}
-
-							const commands = request.data ? request.data : JSON.parse(request.stream.read());
-							const results = commands.map(c => {
-								const flow = manager.flows[c.flow];
-								switch (c.action) {
-									case 'get':
-										return Promise.resolve(flow.toJSONWithOptions({
-											includeName: true
-										}));
-										break;
-
-									case 'start':
-										return flow.start();
-										break;
-
-									case 'stop':
-										return flow.stop();
-										break;
-
-									case 'delete':
-										return flow.remove();
-										break;
-									default:
-										return Promise.reject(new Error(`Unknown command: ${c.action}`));
-								}
-							});
-
-							fullfill(Promise.all(results));
-						} catch (e) {
-							step.error(e);
-							reject(e);
-						}
-					}, 0);
-				});
-			}
-		});
+			}));
+		};
 
 		return Promise.resolve(step);
 	}

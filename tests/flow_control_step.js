@@ -13,7 +13,7 @@ const path = require('path'),
   fs = require('fs');
 
 const testStep = require('kronos-test-step'),
-  BaseStep = require('kronos-step');
+  endpoint = require('kronos-step').endpoint;
 
 const manager = testStep.managerMock;
 
@@ -35,19 +35,11 @@ describe('flow-control', function () {
     type: "kronos-flow-control"
   });
 
-  const testEndpoint = BaseStep.createEndpoint('test', {
-    "out": true,
-    "active": true
-  });
+  const testEndpoint = new endpoint.SendEndpoint('test');
+  testEndpoint.connected = fc.endpoints.in;
 
-  testEndpoint.connect(fc.endpoints.in);
-
-  const testCommandEndpoint = BaseStep.createEndpoint('test', {
-    "out": true,
-    "active": true
-  });
-
-  testCommandEndpoint.connect(fc.endpoints.command);
+  const testCommandEndpoint = new endpoint.SendEndpoint('test');
+  testCommandEndpoint.connected = fc.endpoints.command;
 
   describe('static', function () {
     testStep.checkStepStatic(manager, fc);
@@ -62,7 +54,7 @@ describe('flow-control', function () {
 
         promise = testEndpoint.send({
           stream: flowStream
-        }).value;
+        });
 
         promise.then(f => {
           console.log(`A fullfilled: ${f}`);
@@ -72,7 +64,7 @@ describe('flow-control', function () {
 
         promise = testEndpoint.send({
           stream: invalidFlowStream
-        }).value;
+        });
 
         promise.then(f => {
           console.log(`B fullfilled: ${f}`);
@@ -105,7 +97,7 @@ describe('flow-control', function () {
               action: "stop",
               flow: "sample"
             }]
-          }).value;
+          });
 
           promise.then(f => {
             console.log(`C fullfilled: ${f}`);
@@ -124,7 +116,7 @@ describe('flow-control', function () {
               action: "getStepInstance",
               flow: "sample"
             }]
-          }).value;
+          });
 
           promise.then(f => {
             console.log(`D fullfilled: ${f}`);
