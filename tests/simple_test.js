@@ -50,27 +50,27 @@ describe('flow-control', function () {
     testStep.checkStepLivecycle(manager, fc, function (step, state, livecycle, done) {
       if (state === 'running' && !wasRunning) {
         //console.log(`${state}: ${livecycle.statesHistory}`);
-        let promise;
 
-        promise = testEndpoint.send({
+        testEndpoint.send({
           stream: flowStream
+        }).then(f => {
+          assert.equal(manager.flows['sample'].name, 'sample');
+          assert.equal(f.name, 'sample');
+          console.log(`A fullfilled: ${f.name} ${Object.keys(manager.flows)}`);
         });
 
-        promise.then(f => {
-          console.log(`A fullfilled: ${f}`);
-        }, r => {
-          console.log(`A rejected: ${r}`)
-        });
+        try {
+          testEndpoint.send({
+            stream: invalidFlowStream
+          }).then(f => {
+            console.log(`B fullfilled: ${f}`);
+          }, r => {
+            console.log(`B rejected: ${r}`)
+          });
+        } catch (e) {
 
-        promise = testEndpoint.send({
-          stream: invalidFlowStream
-        });
-
-        promise.then(f => {
-          console.log(`B fullfilled: ${f}`);
-        }, r => {
-          console.log(`B rejected: ${r}`)
-        });
+          console.log(`XX ${e}`);
+        }
 
         testEndpoint.send({
           data: {
@@ -92,14 +92,12 @@ describe('flow-control', function () {
         });
 
         try {
-          promise = testCommandEndpoint.send({
+          testCommandEndpoint.send({
             data: [{
               action: "stop",
               flow: "sample"
             }]
-          });
-
-          promise.then(f => {
+          }).then(f => {
             console.log(`C fullfilled: ${f}`);
           }, r => {
             console.log(`C rejected: ${r}`)
@@ -111,14 +109,12 @@ describe('flow-control', function () {
         }
 
         try {
-          promise = testCommandEndpoint.send({
+          testCommandEndpoint.send({
             data: [{
               action: "getStepInstance",
               flow: "sample"
             }]
-          });
-
-          promise.then(f => {
+          }).then(f => {
             console.log(`D fullfilled: ${f}`);
           }, r => {
             console.log(`D rejected: ${r}`)
@@ -135,7 +131,7 @@ describe('flow-control', function () {
       if (state === 'stopped' && wasRunning) {
         //console.log(`state: ${state}`);
         assert.equal(manager.flows['sample'].name, 'sample');
-        assert.equal(manager.flows['sample2'].name, 'sample2');
+        //      assert.equal(manager.flows['sample2'].name, 'sample2');
       }
 
       done();
