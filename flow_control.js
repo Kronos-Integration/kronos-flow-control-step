@@ -30,19 +30,16 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 						return Promise.resolve(flow.toJSONWithOptions({
 							includeName: true
 						}));
-						break;
 
 					case 'start':
 						return flow.start();
-						break;
 
 					case 'stop':
 						return flow.stop();
-						break;
 
 					case 'delete':
 						return flow.remove();
-						break;
+
 					default:
 						return Promise.reject(new Error(`Unknown command: ${c.action}`));
 				}
