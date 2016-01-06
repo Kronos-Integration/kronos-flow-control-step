@@ -17,11 +17,11 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 		const step = this;
 		const manager = this.manager;
 
-		step.endpoints.in.receive = request =>
+		step.interceptedEndpoints.in.receive = request =>
 			Promise.resolve(manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
 				request.stream.read()))));
 
-		step.endpoints.command.receive = request => {
+		step.interceptedEndpoints.command.receive = request => {
 			const commands = request.data ? request.data : JSON.parse(request.stream.read());
 			return Promise.all(commands.map(c => {
 				const flow = manager.flows[c.flow];
