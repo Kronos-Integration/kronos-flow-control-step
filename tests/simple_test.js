@@ -54,7 +54,7 @@ describe('flow-control', function () {
         testEndpoint.send({
           stream: flowStream
         }).then(f => {
-          assert.equal(manager.flows['sample'].name, 'sample');
+          assert.equal(manager.flows.sample.name, 'sample');
           assert.equal(f.name, 'sample');
           console.log(`A fullfilled: ${f.name} ${Object.keys(manager.flows)}`);
         });
@@ -68,7 +68,6 @@ describe('flow-control', function () {
             console.log(`B rejected: ${r}`)
           });
         } catch (e) {
-
           console.log(`XX ${e}`);
         }
 
@@ -100,7 +99,7 @@ describe('flow-control', function () {
           }).then(f => {
             console.log(`C fullfilled: ${f}`);
           }, r => {
-            console.log(`C rejected: ${r}`)
+            console.log(`C rejected: ${r}`);
           });
         } catch (e) {
           console.log(e);
@@ -117,7 +116,7 @@ describe('flow-control', function () {
           }).then(f => {
             console.log(`D fullfilled: ${f}`);
           }, r => {
-            console.log(`D rejected: ${r}`)
+            console.log(`D rejected: ${r}`);
           });
         } catch (e) {
           console.log(e);
@@ -130,7 +129,7 @@ describe('flow-control', function () {
 
       if (state === 'stopped' && wasRunning) {
         //console.log(`state: ${state}`);
-        assert.equal(manager.flows['sample'].name, 'sample');
+        assert.equal(manager.flows.sample.name, 'sample');
         //      assert.equal(manager.flows['sample2'].name, 'sample2');
       }
 
