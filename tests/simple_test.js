@@ -48,7 +48,10 @@ describe('flow-control', function () {
   describe('live-cycle', function () {
     let wasRunning = false;
     testStep.checkStepLivecycle(manager, fc, function (step, state, livecycle, done) {
+
       if (state === 'running' && !wasRunning) {
+        wasRunning = true;
+
         //console.log(`${state}: ${livecycle.statesHistory}`);
 
         testEndpoint.send({
@@ -56,19 +59,19 @@ describe('flow-control', function () {
         }).then(f => {
           assert.equal(manager.flows.sample.name, 'sample');
           assert.equal(f.name, 'sample');
-          console.log(`A fullfilled: ${f.name} ${Object.keys(manager.flows)}`);
+          //console.log(`A fullfilled: ${f.name} ${Object.keys(manager.flows)}`);
         });
 
         try {
           testEndpoint.send({
             stream: invalidFlowStream
           }).then(f => {
-            console.log(`B fullfilled: ${f}`);
+            done(new Error("should be rejected"));
           }, r => {
             console.log(`B rejected: ${r}`)
           });
         } catch (e) {
-          console.log(`XX ${e}`);
+          done(e);
         }
 
         testEndpoint.send({
@@ -114,7 +117,7 @@ describe('flow-control', function () {
               flow: "sample"
             }]
           }).then(f => {
-            console.log(`D fullfilled: ${f}`);
+            done(new Error("should be rejected"));
           }, r => {
             console.log(`D rejected: ${r}`);
           });
@@ -123,8 +126,6 @@ describe('flow-control', function () {
           done(e);
           return;
         }
-
-        wasRunning = true;
       }
 
       if (state === 'stopped' && wasRunning) {
