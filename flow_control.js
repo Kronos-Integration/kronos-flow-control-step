@@ -14,14 +14,13 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 		}
 	},
 	_start() {
-		const step = this;
 		const manager = this.manager;
 
-		step.interceptedEndpoints.in.receive = request =>
+		this.interceptedEndpoints.in.receive = request =>
 			Promise.resolve(manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
 				request.stream.read()))));
 
-		step.interceptedEndpoints.command.receive = request => {
+		this.interceptedEndpoints.command.receive = request => {
 			const commands = request.data ? request.data : JSON.parse(request.stream.read());
 			return Promise.all(commands.map(c => {
 				const flow = manager.flows[c.flow];
@@ -46,7 +45,7 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 			}));
 		};
 
-		return Promise.resolve(step);
+		return Promise.resolve(this);
 	}
 });
 

@@ -1,7 +1,7 @@
 {
   "name": "kronos-flow-control-step",
   "version": "0.0.0",
-  "description": "step to administrate flows",
+  "description": "Step to perform flow controlling actions like load delete stop start",
   "keywords": [
     "kronos-step"
   ],
@@ -29,7 +29,7 @@
     "istanbul": "0.4.1",
     "kronos-flow": "^1.6.0",
     "kronos-step-stdio": "^2.1.0",
-    "kronos-test-step": "2.8.0",
+    "kronos-test-step": "^2.9.1",
     "mocha": "2.3.4",
     "semantic-release": "6.0.3"
   },
