@@ -18,8 +18,9 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 
 		this.interceptedEndpoints.in.receive = request =>
 			new Promise((fullfilled, rejected) => {
+				// TODO decide if stream or data
 				fullfilled(manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
-					request.stream.read()))));
+					request.payload.read()))));
 			});
 
 		this.interceptedEndpoints.command.receive = request => {

@@ -54,8 +54,8 @@ describe('flow-control', function () {
 
         //console.log(`${state}: ${livecycle.statesHistory}`);
 
-        testEndpoint.send({
-          stream: flowStream
+        testEndpoint.receive({
+          payload: flowStream
         }).then(f => {
           assert.equal(manager.flows.sample.name, 'sample');
           assert.equal(f.name, 'sample');
@@ -63,8 +63,8 @@ describe('flow-control', function () {
         });
 
         try {
-          testEndpoint.send({
-            stream: invalidFlowStream
+          testEndpoint.receive({
+            payload: invalidFlowStream
           }).then(f => {
             done(new Error("should be rejected"));
           }, r => {
@@ -74,7 +74,7 @@ describe('flow-control', function () {
           done(e);
         }
 
-        testEndpoint.send({
+        testEndpoint.receive({
           data: {
             "name": "sample2",
             "type": "kronos-flow",
@@ -94,7 +94,7 @@ describe('flow-control', function () {
         });
 
         try {
-          testCommandEndpoint.send({
+          testCommandEndpoint.receive({
             data: [{
               action: "stop",
               flow: "sample"
@@ -111,7 +111,7 @@ describe('flow-control', function () {
         }
 
         try {
-          testCommandEndpoint.send({
+          testCommandEndpoint.receive({
             data: [{
               action: "getStepInstance",
               flow: "sample"
