@@ -21,7 +21,7 @@ require('../flow_control').registerWithManager(manager);
 require('kronos-flow').registerWithManager(manager);
 require('kronos-step-stdio').registerWithManager(manager);
 
-describe('flow-control', function () {
+describe('flow-control', () => {
   const flowStream = fs.createReadStream(path.join(__dirname, 'fixtures', 'sample.flow'), {
     encoding: 'utf8'
   });
@@ -41,13 +41,13 @@ describe('flow-control', function () {
   const testCommandEndpoint = new endpoint.SendEndpoint('test');
   testCommandEndpoint.connected = fc.endpoints.command;
 
-  describe('static', function () {
+  describe('static', () => {
     testStep.checkStepStatic(manager, fc);
   });
 
-  describe('live-cycle', function () {
+  describe('live-cycle', () => {
     let wasRunning = false;
-    testStep.checkStepLivecycle(manager, fc, function (step, state, livecycle, done) {
+    testStep.checkStepLivecycle(manager, fc, (step, state, livecycle, done) => {
 
       if (state === 'running' && !wasRunning) {
         wasRunning = true;
@@ -68,7 +68,7 @@ describe('flow-control', function () {
           }).then(f => {
             done(new Error("should be rejected"));
           }, r => {
-            console.log(`B rejected: ${r}`)
+            console.log(`B rejected: ${r}`);
           });
         } catch (e) {
           done(e);
