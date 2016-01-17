@@ -48,7 +48,7 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 			}));
 		};
 
-		return Promise.resolve(this);
+		return Promise.resolve();
 	}
 });
 
