@@ -65,11 +65,10 @@ describe('flow-control', () => {
         try {
           testEndpoint.receive({
             payload: invalidFlowStream
-          }).then(f => {
-            done(new Error("should be rejected"));
-          }, r => {
-            console.log(`B rejected: ${r}`);
-          });
+          }).then(f =>
+            done(new Error("should be rejected")), r =>
+            console.log(`B rejected: ${r}`)
+          );
         } catch (e) {
           done(e);
         }
@@ -99,11 +98,9 @@ describe('flow-control', () => {
               action: "stop",
               flow: "sample"
             }]
-          }).then(f => {
-            console.log(`C fullfilled: ${f}`);
-          }, r => {
-            console.log(`C rejected: ${r}`);
-          });
+          }).then(f =>
+            console.log(`C fullfilled: ${f}`), r =>
+            console.log(`C rejected: ${r}`))
         } catch (e) {
           console.log(e);
           done(e);
@@ -116,11 +113,10 @@ describe('flow-control', () => {
               action: "getStepInstance",
               flow: "sample"
             }]
-          }).then(f => {
-            done(new Error("should be rejected"));
-          }, r => {
-            console.log(`D rejected: ${r}`);
-          });
+          }).then(f =>
+            done(new Error("should be rejected")), r =>
+            console.log(`D rejected: ${r}`)
+          );
         } catch (e) {
           console.log(e);
           done(e);

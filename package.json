@@ -25,26 +25,28 @@
   },
   "devDependencies": {
     "chai": "3.4.1",
-    "chai-as-promised": "5.2.0",
+    "cz-conventional-changelog": "^1.1.5",
     "istanbul": "0.4.2",
     "kronos-flow": "^1.6.3",
     "kronos-step-stdio": "2.1.2",
     "kronos-test-step": "^2.9.1",
     "mocha": "2.3.4",
-    "semantic-release": "6.0.3"
+    "semantic-release": "6.2.0"
   },
-  "contributors": [
-    {
-      "name": "Torsten Link",
-      "email": "torstenlink@gmx.de"
-    },
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ],
+  "contributors": [{
+    "name": "Torsten Link",
+    "email": "torstenlink@gmx.de"
+  }, {
+    "name": "Markus Felten",
+    "email": "markus.felten@gmx.de"
+  }],
   "license": "BSD-2-Clause",
   "engines": {
     "node": ">=4.2.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
