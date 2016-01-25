@@ -6,10 +6,8 @@
 const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
-  should = chai.should();
-chai.use(require("chai-as-promised"));
-
-const path = require('path'),
+  should = chai.should(),
+  path = require('path'),
   fs = require('fs');
 
 const testStep = require('kronos-test-step'),
