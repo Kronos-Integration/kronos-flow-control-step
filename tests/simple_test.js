@@ -11,15 +11,24 @@ const chai = require('chai'),
   fs = require('fs');
 
 const testStep = require('kronos-test-step'),
-  endpoint = require('kronos-step').endpoint;
+  endpoint = require('kronos-endpoint'),
+  ksm = require('kronos-service-manager');
 
-const manager = testStep.managerMock;
+let manager;
+let stdin;
 
-require('../flow_control').registerWithManager(manager);
-require('kronos-flow').registerWithManager(manager);
-require('kronos-step-stdio').registerWithManager(manager);
+before(done => {
+  ksm.manager({}, [
+    require('../flow_control'),
+    require('kronos-flow'),
+    require('kronos-step-stdio')
+  ]).then(m => {
+    manager = m;
+    done();
+  });
+});
 
-describe('flow-control', () => {
+it('flow-control', () => {
   const flowStream = fs.createReadStream(path.join(__dirname, 'fixtures', 'sample.flow'), {
     encoding: 'utf8'
   });
@@ -28,10 +37,10 @@ describe('flow-control', () => {
     encoding: 'utf8'
   });
 
-  const fc = manager.steps['kronos-flow-control'].createInstance(manager, undefined, {
+  const fc = manager.steps['kronos-flow-control'].createInstance({
     name: "myStep",
     type: "kronos-flow-control"
-  });
+  }, manager);
 
   const testEndpoint = new endpoint.SendEndpoint('test');
   testEndpoint.connected = fc.endpoints.in;
@@ -57,7 +66,7 @@ describe('flow-control', () => {
         }).then(f => {
           assert.equal(manager.flows.sample.name, 'sample');
           assert.equal(f.name, 'sample');
-          //console.log(`A fullfilled: ${f.name} ${Object.keys(manager.flows)}`);
+          console.log(`A fullfilled: ${f.name} ${Object.keys(manager.flows)}`);
         });
 
         try {
@@ -123,9 +132,7 @@ describe('flow-control', () => {
       }
 
       if (state === 'stopped' && wasRunning) {
-        //console.log(`state: ${state}`);
         assert.equal(manager.flows.sample.name, 'sample');
-        //      assert.equal(manager.flows['sample2'].name, 'sample2');
       }
 
       done();

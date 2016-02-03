@@ -19,14 +19,21 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 		this.endpoints.in.receive = request =>
 			new Promise((fullfilled, rejected) => {
 				// TODO decide if stream or data
-				fullfilled(manager.registerFlow(manager.getStepInstance(request.data ? request.data : JSON.parse(
-					request.payload.read()))));
+
+				const flow = manager.createStepInstanceFromConfig(request.data ? request.data : JSON.parse(
+					request.payload.read()), manager);
+
+				fullfilled(manager.registerFlow(flow));
 			});
 
 		this.endpoints.command.receive = request => {
 			const commands = request.data ? request.data : JSON.parse(request.stream.read());
 			return Promise.all(commands.map(c => {
 				const flow = manager.flows[c.flow];
+
+				if (!flow) {
+					return Promise.reject(new Error(`Unknown flow: ${c.flow}`));
+				}
 				switch (c.action) {
 					case 'get':
 						return Promise.resolve(flow.toJSONWithOptions({
@@ -52,6 +59,4 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 	}
 });
 
-exports.registerWithManager = function (manager) {
-	manager.registerStep(flowControlStep);
-};
+exports.registerWithManager = manager => manager.registerStep(flowControlStep);
