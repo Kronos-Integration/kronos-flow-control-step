@@ -1,4 +1,4 @@
-/* global describe, it, xit */
+/* global describe, it, xit, before */
 /* jslint node: true, esnext: true */
 
 "use strict";
@@ -107,7 +107,7 @@ it('flow-control', () => {
             }]
           }).then(f =>
             console.log(`C fullfilled: ${f}`), r =>
-            console.log(`C rejected: ${r}`))
+            console.log(`C rejected: ${r}`));
         } catch (e) {
           console.log(e);
           done(e);
