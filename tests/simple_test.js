@@ -101,10 +101,10 @@ it('flow-control', () => {
 
         try {
           testCommandEndpoint.receive({
-            data: [{
+            data: {
               action: "stop",
               flow: "sample"
-            }]
+            }
           }).then(f =>
             console.log(`C fullfilled: ${f}`), r =>
             console.log(`C rejected: ${r}`));

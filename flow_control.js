@@ -27,7 +27,12 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 			});
 
 		this.endpoints.command.receive = request => {
-			const commands = request.data ? request.data : JSON.parse(request.payload.read());
+			let commands = request.data ? request.data : JSON.parse(request.payload.read());
+
+			if (!Array.isArray(commands)) {
+				commands = [commands];
+			}
+
 			return Promise.all(commands.map(c => {
 				const flow = manager.flows[c.flow];
 
