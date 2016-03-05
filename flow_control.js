@@ -34,11 +34,16 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 			}
 
 			return Promise.all(commands.map(c => {
+				if (c.action === 'list') {
+					return Promise.resolve(Object.keys(manager.flows));
+				}
+
 				const flow = manager.flows[c.flow];
 
 				if (!flow) {
 					return Promise.reject(new Error(`Unknown flow: ${c.flow}`));
 				}
+
 				switch (c.action) {
 					case 'get':
 						return Promise.resolve(flow.toJSONWithOptions({
