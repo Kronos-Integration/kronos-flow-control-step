@@ -30,7 +30,7 @@
     "jsdoc": "3.4.0",
     "kronos-flow": "2.5.9",
     "kronos-service-manager": "3.2.12",
-    "kronos-step-stdio": "3.0.1",
+    "kronos-step-stdio": "3.0.2",
     "kronos-test-step": "3.0.3",
     "mocha": "2.4.5",
     "semantic-release": "6.2.1"
