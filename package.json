@@ -28,7 +28,7 @@
     "cz-conventional-changelog": "^1.1.5",
     "istanbul": "0.4.2",
     "jsdoc": "3.4.0",
-    "kronos-flow": "2.5.9",
+    "kronos-flow": "2.5.10",
     "kronos-service-manager": "3.2.12",
     "kronos-step-stdio": "3.0.2",
     "kronos-test-step": "3.0.3",
