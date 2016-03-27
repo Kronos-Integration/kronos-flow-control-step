@@ -14,8 +14,7 @@ const testStep = require('kronos-test-step'),
   endpoint = require('kronos-endpoint'),
   ksm = require('kronos-service-manager');
 
-let manager;
-let stdin;
+let manager, stdin;
 
 before(done => {
   ksm.manager({}, [

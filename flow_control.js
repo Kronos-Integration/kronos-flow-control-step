@@ -27,46 +27,48 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 			});
 
 		this.endpoints.command.receive = request => {
-			let commands = request.data ? request.data : JSON.parse(request.payload.read());
+			const command = request.data ? request.data : JSON.parse(request.payload.read());
 
-			if (!Array.isArray(commands)) {
-				commands = [commands];
+			if (Array.isArray(command)) {
+				return Promise.all(command.map(c => execCommand(manager, c)));
+			} else {
+				return execCommand(manager, command);
 			}
-
-			return Promise.all(commands.map(c => {
-				if (c.action === 'list') {
-					return Promise.resolve(Object.keys(manager.flows));
-				}
-
-				const flow = manager.flows[c.flow];
-
-				if (!flow) {
-					return Promise.reject(new Error(`Unknown flow: ${c.flow}`));
-				}
-
-				switch (c.action) {
-					case 'get':
-						return Promise.resolve(flow.toJSONWithOptions({
-							includeName: true
-						}));
-
-					case 'start':
-						return flow.start();
-
-					case 'stop':
-						return flow.stop();
-
-					case 'delete':
-						return flow.remove();
-
-					default:
-						return Promise.reject(new Error(`Unknown command: ${c.action}`));
-				}
-			}));
 		};
 
 		return Promise.resolve();
 	}
 });
+
+function execCommand(manager, command) {
+	if (command.action === 'list') {
+		return Promise.resolve(Object.keys(manager.flows));
+	}
+
+	const flow = manager.flows[command.flow];
+
+	if (!flow) {
+		return Promise.reject(new Error(`Unknown flow: ${command.flow}`));
+	}
+
+	switch (command.action) {
+		case 'get':
+			return Promise.resolve(flow.toJSONWithOptions({
+				includeName: true
+			}));
+
+		case 'start':
+			return flow.start();
+
+		case 'stop':
+			return flow.stop();
+
+		case 'delete':
+			return flow.remove();
+
+		default:
+			return Promise.reject(new Error(`Unknown command: ${command.action}`));
+	}
+}
 
 exports.registerWithManager = manager => manager.registerStep(flowControlStep);
