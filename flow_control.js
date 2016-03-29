@@ -53,9 +53,7 @@ function execCommand(manager, command) {
 
 	switch (command.action) {
 		case 'get':
-			return Promise.resolve(flow.toJSONWithOptions({
-				includeName: true
-			}));
+			return Promise.resolve(flow.toJSONWithOptions(command.options));
 
 		case 'start':
 			return flow.start();
