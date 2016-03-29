@@ -58,14 +58,21 @@ it('flow-control', () => {
       if (state === 'running' && !wasRunning) {
         wasRunning = true;
 
-        //console.log(`${state}: ${livecycle.statesHistory}`);
-
         testEndpoint.receive({
           payload: flowStream
         }).then(f => {
           assert.equal(manager.flows.sample.name, 'sample');
           assert.equal(f.name, 'sample');
-          console.log(`A fullfilled: ${f.name} ${Object.keys(manager.flows)}`);
+
+          testCommandEndpoint.receive({
+            data: {
+              action: "stop",
+              flow: "sample"
+            }
+          }).then(f => {
+            assert.equal(f.state, 'stopped');
+            assert.equal(f.name, 'sample');
+          }, done);
         });
 
         try {
@@ -97,21 +104,6 @@ it('flow-control', () => {
             }
           }
         });
-
-        try {
-          testCommandEndpoint.receive({
-            data: {
-              action: "stop",
-              flow: "sample"
-            }
-          }).then(f =>
-            console.log(`C fullfilled: ${f}`), r =>
-            console.log(`C rejected: ${r}`));
-        } catch (e) {
-          console.log(e);
-          done(e);
-          return;
-        }
 
         try {
           testCommandEndpoint.receive({
