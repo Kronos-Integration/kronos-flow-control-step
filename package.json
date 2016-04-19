@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-flow-control-step#readme",
   "dependencies": {
+    "kronos-endpoint": "^2.4.0",
     "kronos-step": "5.1.4"
   },
   "devDependencies": {
@@ -30,7 +31,7 @@
     "jsdoc": "3.4.0",
     "kronos-flow": "2.5.12",
     "kronos-service-manager": "^3.2.16",
-    "kronos-step-stdio": "3.0.5",
+    "kronos-step-stdio": "^3.0.6",
     "kronos-test-step": "3.1.0",
     "mocha": "2.4.5",
     "semantic-release": "6.2.1"
