@@ -32,7 +32,7 @@
     "kronos-flow": "2.5.15",
     "kronos-service-manager": "^3.3.4",
     "kronos-step-stdio": "^3.0.8",
-    "kronos-test-step": "3.1.0",
+    "kronos-test-step": "3.1.1",
     "mocha": "2.4.5",
     "semantic-release": "6.2.1"
   },
