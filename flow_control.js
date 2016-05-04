@@ -1,16 +1,15 @@
 /* jslint node: true, esnext: true */
 
-"use strict";
+'use strict';
+
+const pcs = require('parse-concat-stream');
 
 const flowControlStep = Object.assign({}, require('kronos-step').Step, {
-	"name": "kronos-flow-control",
-	"description": "flow control step (load/delete/stop/start)",
-	"endpoints": {
-		"in": {
-			"in": true
+	name: 'kronos-flow-control',
+	description: 'flow control step (load/delete/stop/start)',
+	endpoints: { in : { in : true
 		},
-		"command": {
-			"in": true
+		command: { in : true
 		}
 	},
 	_start() {
@@ -18,12 +17,20 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 
 		this.endpoints.in.receive = request =>
 			new Promise((fullfilled, rejected) => {
-				// TODO decide if stream or data
-
-				const flow = manager.createStepInstanceFromConfig(request.data ? request.data : JSON.parse(
-					request.payload.read()), manager);
-
-				fullfilled(manager.registerFlow(flow));
+				if (request.data) {
+					const flow = manager.createStepInstanceFromConfig(request.data, manager);
+					fullfilled(manager.registerFlow(flow));
+				} else {
+					// TODO endpoint should already have converted stream into json object
+					request.payload.pipe(pcs((err, data) => {
+						if (err) {
+							rejected(err);
+						} else {
+							const flow = manager.createStepInstanceFromConfig(data, manager);
+							fullfilled(manager.registerFlow(flow));
+						}
+					}));
+				}
 			});
 
 		this.endpoints.command.receive = request => {
