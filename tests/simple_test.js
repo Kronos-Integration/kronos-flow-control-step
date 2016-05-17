@@ -1,7 +1,7 @@
 /* global describe, it, xit, before */
 /* jslint node: true, esnext: true */
 
-"use strict";
+'use strict';
 
 const chai = require('chai'),
   assert = chai.assert,
@@ -20,7 +20,8 @@ before(done => {
   ksm.manager({}, [
     require('../flow_control'),
     require('kronos-flow'),
-    require('kronos-step-stdio')
+    require('kronos-step-stdio'),
+    require('kronos-interceptor-decode-json')
   ]).then(m => {
     manager = m;
     done();
@@ -28,21 +29,16 @@ before(done => {
 });
 
 it('flow-control', () => {
-  const flowStream = fs.createReadStream(path.join(__dirname, 'fixtures', 'sample.flow'), {
-    encoding: 'utf8'
-  });
-
-  const invalidFlowStream = fs.createReadStream(path.join(__dirname, 'fixtures', 'invalid.flow'), {
-    encoding: 'utf8'
-  });
-
   const fc = manager.steps['kronos-flow-control'].createInstance({
-    name: "myStep",
-    type: "kronos-flow-control"
+    name: 'myStep',
+    type: 'kronos-flow-control'
   }, manager);
 
   const testEndpoint = new endpoint.SendEndpoint('test');
   testEndpoint.connected = fc.endpoints.in;
+
+  //fc.endpoints.in.interceptors = [manager.interceptors['decode-json']];
+  console.log(fc.endpoints.in);
 
   const testCommandEndpoint = new endpoint.SendEndpoint('test');
   testCommandEndpoint.connected = fc.endpoints.command;
@@ -58,68 +54,55 @@ it('flow-control', () => {
       if (state === 'running' && !wasRunning) {
         wasRunning = true;
 
-        testEndpoint.receive({
-          payload: flowStream
-        }).then(f => {
-          assert.equal(manager.flows.sample.name, 'sample');
-          assert.equal(f.name, 'sample');
-
-          testCommandEndpoint.receive({
-            data: {
-              action: "stop",
-              flow: "sample"
-            }
-          }).then(f => {
-            assert.equal(f.state, 'stopped');
+        testEndpoint.receive(JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'sample.flow')))).then(
+          f => {
+            assert.equal(manager.flows.sample.name, 'sample');
             assert.equal(f.name, 'sample');
-          }, done);
-        });
 
-        try {
-          testEndpoint.receive({
-            payload: invalidFlowStream
-          }).then(f =>
-            done(new Error("should be rejected")), r =>
-            console.log(`B rejected: ${r}`)
-          );
-        } catch (e) {
-          done(e);
-        }
+            testCommandEndpoint.receive({
+              action: 'stop',
+              flow: 'sample'
+            }).then(f => {
+              assert.equal(f.state, 'stopped');
+              assert.equal(f.name, 'sample');
+            }, done);
+          });
+
+        /*
+                try {
+                  testEndpoint.receive({}).then(f =>
+                    done(new Error('should be rejected')), r =>
+                    console.log(`B rejected: ${r}`)
+                  );
+                } catch (e) {
+                  done(e);
+                }
+        */
 
         testEndpoint.receive({
-          data: {
-            "name": "sample2",
-            "type": "kronos-flow",
-            "description": "this is the description of the flow",
-            "steps": {
-              "s1": {
-                "type": "kronos-stdin",
-                "endpoints": {
-                  "out": "s2/in"
-                }
-              },
-              "s2": {
-                "type": "kronos-stdout"
+          name: 'sample2',
+          type: 'kronos-flow',
+          description: 'this is the description of the flow',
+          steps: {
+            s1: {
+              type: 'kronos-stdin',
+              endpoints: {
+                out: 's2/in'
               }
+            },
+            s2: {
+              type: 'kronos-stdout'
             }
           }
         });
 
-        try {
-          testCommandEndpoint.receive({
-            data: [{
-              action: "getStepInstance",
-              flow: "sample"
-            }]
-          }).then(f =>
-            done(new Error("should be rejected")), r =>
-            console.log(`D rejected: ${r}`)
-          );
-        } catch (e) {
-          console.log(e);
-          done(e);
-          return;
-        }
+        testCommandEndpoint.receive([{
+          action: 'getStepInstance',
+          flow: 'sample'
+        }]).then(f =>
+          done(new Error('should be rejected')), r =>
+          console.log(`D rejected: ${r}`)
+        );
       }
 
       if (state === 'stopped' && wasRunning) {

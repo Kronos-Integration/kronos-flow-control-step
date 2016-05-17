@@ -2,8 +2,6 @@
 
 'use strict';
 
-const pcs = require('parse-concat-stream');
-
 const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 	name: 'kronos-flow-control',
 	description: 'flow control step (load/delete/stop/start)',
@@ -15,39 +13,23 @@ const flowControlStep = Object.assign({}, require('kronos-step').Step, {
 	_start() {
 		const manager = this.manager;
 
-		this.endpoints.in.receive = request =>
-			new Promise((fullfilled, rejected) => {
-				if (request.data) {
-					const flow = manager.createStepInstanceFromConfig(request.data, manager);
-					fullfilled(manager.registerFlow(flow));
-				} else {
-					// TODO endpoint should already have converted stream into json object
-					request.payload.pipe(pcs((err, data) => {
-						if (err) {
-							rejected(err);
-						} else {
-							const flow = manager.createStepInstanceFromConfig(data, manager);
-							fullfilled(manager.registerFlow(flow));
-						}
-					}));
-				}
-			});
-
-		this.endpoints.command.receive = request => {
-			const command = request.data ? request.data : JSON.parse(request.payload.read());
-
-			if (Array.isArray(command)) {
-				return Promise.all(command.map(c => execCommand(manager, c)));
-			} else {
-				return execCommand(manager, command);
-			}
+		this.endpoints.in.receive = request => {
+			const flow = manager.createStepInstanceFromConfig(request, manager);
+			return manager.registerFlow(flow);
 		};
+
+		this.endpoints.command.receive = request => execute(manager, request);
 
 		return Promise.resolve();
 	}
 });
 
-function execCommand(manager, command) {
+function execute(manager, command) {
+
+	if (Array.isArray(command)) {
+		return Promise.all(command.map(c => execute(manager, c)));
+	}
+
 	if (command.action === 'list') {
 		return Promise.resolve(Object.keys(manager.flows));
 	}
