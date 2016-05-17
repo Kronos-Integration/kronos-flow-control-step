@@ -22,20 +22,20 @@
   "homepage": "https://github.com/Kronos-Integration/kronos-flow-control-step#readme",
   "dependencies": {
     "kronos-endpoint": "^2.9.1",
-    "kronos-step": "^5.2.4",
-    "parse-concat-stream": "^0.2.0"
+    "kronos-step": "^5.2.5"
   },
   "devDependencies": {
     "chai": "3.5.0",
     "cz-conventional-changelog": "1.1.6",
     "istanbul": "0.4.3",
     "jsdoc": "3.4.0",
-    "kronos-flow": "^2.5.17",
-    "kronos-service-manager": "^3.3.6",
-    "kronos-step-stdio": "^3.0.9",
+    "kronos-flow": "^2.5.18",
+    "kronos-interceptor-decode-json": "^1.0.1",
+    "kronos-service-manager": "^3.3.9",
+    "kronos-step-stdio": "^3.0.10",
     "kronos-test-step": "3.1.3",
     "mocha": "2.4.5",
-    "semantic-release": "6.2.1"
+    "semantic-release": "^6.2.2"
   },
   "contributors": [
     {
