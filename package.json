@@ -29,7 +29,7 @@
     "cz-conventional-changelog": "1.1.6",
     "istanbul": "0.4.3",
     "jsdoc": "3.4.0",
-    "kronos-flow": "^2.5.21",
+    "kronos-flow": "^2.5.22",
     "kronos-interceptor-decode-json": "^1.0.1",
     "kronos-service-manager": "^3.4.2",
     "kronos-step-stdio": "^3.0.13",
