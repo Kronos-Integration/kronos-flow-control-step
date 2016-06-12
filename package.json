@@ -31,8 +31,8 @@
     "jsdoc": "3.4.0",
     "kronos-flow": "^2.5.23",
     "kronos-interceptor-decode-json": "^1.0.1",
-    "kronos-service-manager": "^3.4.4",
-    "kronos-step-stdio": "^3.0.14",
+    "kronos-service-manager": "^3.4.5",
+    "kronos-step-stdio": "^3.0.15",
     "kronos-test-step": "3.1.4",
     "mocha": "2.5.3",
     "semantic-release": "6.3.0"
