@@ -22,14 +22,14 @@
   "homepage": "https://github.com/Kronos-Integration/kronos-flow-control-step#readme",
   "dependencies": {
     "kronos-endpoint": "^2.13.4",
-    "kronos-step": "^5.3.6"
+    "kronos-step": "^5.3.7"
   },
   "devDependencies": {
     "chai": "3.5.0",
     "cz-conventional-changelog": "1.2.0",
     "istanbul": "0.4.5",
     "jsdoc": "3.4.1",
-    "kronos-flow": "^2.5.29",
+    "kronos-flow": "^2.5.32",
     "kronos-interceptor-decode-json": "^1.0.3",
     "kronos-service-manager": "^3.4.19",
     "kronos-step-stdio": "^3.0.17",
