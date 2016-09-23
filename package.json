@@ -31,7 +31,7 @@
     "jsdoc": "3.4.1",
     "kronos-flow": "^2.5.29",
     "kronos-interceptor-decode-json": "^1.0.3",
-    "kronos-service-manager": "^3.4.17",
+    "kronos-service-manager": "^3.4.19",
     "kronos-step-stdio": "^3.0.17",
     "kronos-test-step": "3.1.4",
     "mocha": "3.0.2",
