@@ -21,29 +21,32 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-flow-control-step#readme",
   "dependencies": {
-    "kronos-endpoint": "^2.14.3",
+    "kronos-endpoint": "^2.14.5",
     "kronos-step": "^5.3.7"
   },
   "devDependencies": {
     "chai": "3.5.0",
     "cz-conventional-changelog": "1.2.0",
     "istanbul": "0.4.5",
-    "kronos-flow": "^2.5.32",
     "jsdoc": "3.4.3",
-    "kronos-interceptor-decode-json": "^1.0.3",
-    "kronos-service-manager": "^3.4.19",
-    "kronos-step-stdio": "^3.0.17",
+    "kronos-flow": "^2.5.32",
+    "kronos-interceptor-decode-json": "^1.0.4",
+    "kronos-service-manager": "^3.4.20",
+    "kronos-step-stdio": "^3.0.18",
     "kronos-test-step": "3.1.4",
     "mocha": "3.2.0",
-    "semantic-release": "6.3.2"
+    "semantic-release": "^6.3.5"
   },
-  "contributors": [{
-    "name": "Torsten Link",
-    "email": "torstenlink@gmx.de"
-  }, {
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Torsten Link",
+      "email": "torstenlink@gmx.de"
+    },
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "license": "BSD-2-Clause",
   "engines": {
     "node": ">=6.9.1"
