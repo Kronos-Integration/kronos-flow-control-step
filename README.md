@@ -16,6 +16,8 @@ Step to perform flow controlling actions like load delete stop start
 Command endpoint
 ================
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Kronos-Integration/kronos-flow-control-step.svg)](https://greenkeeper.io/)
+
 A Request can either be a stream o json data or a an object with data property.
 
 start a flow
