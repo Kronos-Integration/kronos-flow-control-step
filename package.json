@@ -28,7 +28,7 @@
     "chai": "4.1.0",
     "cz-conventional-changelog": "2.0.0",
     "istanbul": "0.4.5",
-    "jsdoc": "3.5.2",
+    "jsdoc": "3.5.3",
     "kronos-flow": "^2.5.33",
     "kronos-interceptor-decode-json": "^1.0.11",
     "kronos-service-manager": "^3.5.1",
