@@ -1,13 +1,7 @@
-/* global describe, it, xit, before */
-/* jslint node: true, esnext: true */
+import test from 'ava';
+import { SendEndpoint } from 'kronos-endpoint';
 
-'use strict';
-
-const chai = require('chai'),
-  assert = chai.assert,
-  expect = chai.expect,
-  should = chai.should(),
-  path = require('path'),
+const path = require('path'),
   fs = require('fs');
 
 const testStep = require('kronos-test-step'),
@@ -17,30 +11,35 @@ const testStep = require('kronos-test-step'),
 let manager, stdin;
 
 before(done => {
-  ksm.manager({}, [
-    require('../flow_control'),
-    require('kronos-flow'),
-    require('kronos-step-stdio'),
-    require('kronos-interceptor-decode-json')
-  ]).then(m => {
-    manager = m;
-    done();
-  });
+  ksm
+    .manager({}, [
+      require('../flow_control'),
+      require('kronos-flow'),
+      require('kronos-step-stdio'),
+      require('kronos-interceptor-decode-json')
+    ])
+    .then(m => {
+      manager = m;
+      done();
+    });
 });
 
-it('flow-control', () => {
-  const fc = manager.steps['kronos-flow-control'].createInstance({
-    name: 'myStep',
-    type: 'kronos-flow-control'
-  }, manager);
+test('flow-control', async t => {
+  const fc = manager.steps['kronos-flow-control'].createInstance(
+    {
+      name: 'myStep',
+      type: 'kronos-flow-control'
+    },
+    manager
+  );
 
-  const testEndpoint = new endpoint.SendEndpoint('test');
+  const testEndpoint = new SendEndpoint('test');
   testEndpoint.connected = fc.endpoints.in;
 
   //fc.endpoints.in.interceptors = [manager.interceptors['decode-json']];
   console.log(fc.endpoints.in);
 
-  const testCommandEndpoint = new endpoint.SendEndpoint('test');
+  const testCommandEndpoint = new SendEndpoint('test');
   testCommandEndpoint.connected = fc.endpoints.command;
 
   describe('static', () => {
@@ -50,34 +49,29 @@ it('flow-control', () => {
   describe('live-cycle', () => {
     let wasRunning = false;
     testStep.checkStepLivecycle(manager, fc, (step, state, livecycle, done) => {
-
       if (state === 'running' && !wasRunning) {
         wasRunning = true;
 
-        testEndpoint.receive(JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'sample.flow')))).then(
-          f => {
+        testEndpoint
+          .receive(
+            JSON.parse(
+              fs.readFileSync(path.join(__dirname, 'fixtures', 'sample.flow'))
+            )
+          )
+          .then(f => {
             assert.equal(manager.flows.sample.name, 'sample');
             assert.equal(f.name, 'sample');
 
-            testCommandEndpoint.receive({
-              action: 'stop',
-              flow: 'sample'
-            }).then(f => {
-              assert.equal(f.state, 'stopped');
-              assert.equal(f.name, 'sample');
-            }, done);
+            testCommandEndpoint
+              .receive({
+                action: 'stop',
+                flow: 'sample'
+              })
+              .then(f => {
+                assert.equal(f.state, 'stopped');
+                assert.equal(f.name, 'sample');
+              }, done);
           });
-
-        /*
-                try {
-                  testEndpoint.receive({}).then(f =>
-                    done(new Error('should be rejected')), r =>
-                    console.log(`B rejected: ${r}`)
-                  );
-                } catch (e) {
-                  done(e);
-                }
-        */
 
         testEndpoint.receive({
           name: 'sample2',
@@ -96,13 +90,17 @@ it('flow-control', () => {
           }
         });
 
-        testCommandEndpoint.receive([{
-          action: 'getStepInstance',
-          flow: 'sample'
-        }]).then(f =>
-          done(new Error('should be rejected')), r =>
-          console.log(`D rejected: ${r}`)
-        );
+        testCommandEndpoint
+          .receive([
+            {
+              action: 'getStepInstance',
+              flow: 'sample'
+            }
+          ])
+          .then(
+            f => done(new Error('should be rejected')),
+            r => console.log(`D rejected: ${r}`)
+          );
       }
 
       if (state === 'stopped' && wasRunning) {

@@ -1,16 +1,22 @@
 import { Step } from 'kronos-step';
 
 export class FlowControlStep extends Step {
-  static get name() { return 'kronos-flow-control'; }
-  static get description() { return 'flow control step (load/delete/stop/start)'; }
-  static get endpoints() { return {
-    in: {
-      in: true
-    },
-    command: {
-      in: true
-    }
-  }; }
+  static get name() {
+    return 'kronos-flow-control';
+  }
+  static get description() {
+    return 'flow control step (load/delete/stop/start)';
+  }
+  static get endpoints() {
+    return {
+      in: {
+        in: true
+      },
+      command: {
+        in: true
+      }
+    };
+  }
 
   async _start() {
     this.endpoints.in.receive = async request => {
@@ -20,7 +26,7 @@ export class FlowControlStep extends Step {
 
     this.endpoints.command.receive = request => execute(manager, request);
   }
-};
+}
 
 async function execute(manager, command) {
   if (Array.isArray(command)) {
@@ -55,4 +61,6 @@ async function execute(manager, command) {
   }
 }
 
-export registerWithManager = (manager) => manager.registerStep(FlowControlStep);
+export async function registerWithManager(manager) {
+  return manager.registerStep(FlowControlStep);
+}
