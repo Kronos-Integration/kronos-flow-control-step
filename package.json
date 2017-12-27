@@ -1,9 +1,10 @@
 {
   "name": "kronos-flow-control-step",
   "version": "0.0.0-semantic-release",
-  "description":
-    "Step to perform flow controlling actions like load delete stop start",
-  "keywords": ["kronos-step"],
+  "description": "Step to perform flow controlling actions like load delete stop start",
+  "keywords": [
+    "kronos-step"
+  ],
   "main": "dist/flow-control.js",
   "module": "src/flow-control.js",
   "scripts": {
@@ -20,15 +21,12 @@
   },
   "repository": {
     "type": "git",
-    "url":
-      "git+https://github.com/Kronos-Integration/kronos-flow-control-step.git"
+    "url": "git+https://github.com/Kronos-Integration/kronos-flow-control-step.git"
   },
   "bugs": {
-    "url":
-      "https://github.com/Kronos-Integration/kronos-flow-control-step/issues"
+    "url": "https://github.com/Kronos-Integration/kronos-flow-control-step/issues"
   },
-  "homepage":
-    "https://github.com/Kronos-Integration/kronos-flow-control-step#readme",
+  "homepage": "https://github.com/Kronos-Integration/kronos-flow-control-step#readme",
   "dependencies": {
     "kronos-endpoint": "^2.14.14",
     "kronos-step": "^5.6.4"
@@ -45,7 +43,6 @@
     "nyc": "^11.4.1",
     "ava": "^0.24.0",
     "rollup": "^0.53.0",
-    "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-multi-entry": "^2.0.2",
     "xo": "^0.19.0"
   },
@@ -72,13 +69,23 @@
     }
   },
   "ava": {
-    "files": ["build/*-test.js"],
-    "presets": ["env"],
-    "require": ["babel-register"]
+    "files": [
+      "build/*-test.js"
+    ],
+    "presets": [
+      "env"
+    ],
+    "require": [
+      "babel-register"
+    ]
   },
   "nyc": {
-    "include": ["build/*-test.js"],
-    "reporter": ["lcov"],
+    "include": [
+      "build/*-test.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
     "report-dir": "./build/coverage"
   }
 }
