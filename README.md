@@ -11,12 +11,12 @@
 [![downloads](http://img.shields.io/npm/dm/kronos-flow-control-step.svg?style=flat-square)](https://npmjs.org/package/kronos-flow-control-step)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
+# kronos-flow-control-step
+
 Step to perform flow controlling actions like load delete stop start
 
 Command endpoint
 ================
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/Kronos-Integration/kronos-flow-control-step.svg)](https://greenkeeper.io/)
 
 A Request can either be a stream o json data or a an object with data property.
 
@@ -50,8 +50,9 @@ delete a flow
 }
 ```
 
-install
-=======
+# API
+
+# install
 
 With [npm](http://npmjs.org) do:
 
@@ -59,7 +60,6 @@ With [npm](http://npmjs.org) do:
 npm install kronos-flow-control-step
 ```
 
-license
-=======
+# license
 
 BSD-2-Clause
