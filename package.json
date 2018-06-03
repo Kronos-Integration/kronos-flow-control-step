@@ -1,6 +1,9 @@
 {
   "name": "kronos-flow-control-step",
   "version": "0.0.0-semantic-release",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/flow-control.js",
   "module": "src/flow-control.js",
   "description": "Step to perform flow controlling actions like load delete stop start",
