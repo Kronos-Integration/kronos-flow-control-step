@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "kronos-flow": "^2.5.40",
-    "kronos-interceptor-decode-json": "^1.0.11",
+    "kronos-interceptor-decode-json": "^1.1.0",
     "kronos-service-manager": "^3.5.1",
     "kronos-step-stdio": "^3.0.18",
     "kronos-test-step": "3.1.4",
