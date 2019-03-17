@@ -7,7 +7,6 @@
 [![Coverage Status](https://coveralls.io/repos/Kronos-Integration/kronos-flow-control-step/badge.svg)](https://coveralls.io/r/Kronos-Integration/kronos-flow-control-step)
 [![Known Vulnerabilities](https://snyk.io/test/github/Kronos-Integration/kronos-flow-control-step/badge.svg)](https://snyk.io/test/github/Kronos-Integration/kronos-flow-control-step)
 [![GitHub Issues](https://img.shields.io/github/issues/Kronos-Integration/kronos-flow-control-step.svg?style=flat-square)](https://github.com/Kronos-Integration/kronos-flow-control-step/issues)
-[![Stories in Ready](https://badge.waffle.io/Kronos-Integration/kronos-flow-control-step.svg?label=ready&title=Ready)](http://waffle.io/Kronos-Integration/kronos-flow-control-step)
 [![Dependency Status](https://david-dm.org/Kronos-Integration/kronos-flow-control-step.svg)](https://david-dm.org/Kronos-Integration/kronos-flow-control-step)
 [![devDependency Status](https://david-dm.org/Kronos-Integration/kronos-flow-control-step/dev-status.svg)](https://david-dm.org/Kronos-Integration/kronos-flow-control-step#info=devDependencies)
 [![docs](http://inch-ci.org/github/Kronos-Integration/kronos-flow-control-step.svg?branch=master)](http://inch-ci.org/github/Kronos-Integration/kronos-flow-control-step)
