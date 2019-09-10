@@ -38,7 +38,7 @@
     "ava": "^2.3.0",
     "builtin-modules": "^3.1.0",
     "c8": "^5.0.4",
-    "documentation": "^12.1.1",
+    "documentation": "^12.1.2",
     "esm": "^3.2.25",
     "kronos-flow": "^2.5.40",
     "kronos-interceptor-decode-json": "^1.1.0",
